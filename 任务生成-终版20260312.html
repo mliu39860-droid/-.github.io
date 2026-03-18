@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国移动 · 政企任务下派 (最终版)</title>
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #eef3f9;
+            color: #1a2b3e;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* 头部品牌区 */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-icon {
+            background: #1a5a9c;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .brand h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #003366;
+        }
+
+        .task-chip {
+            background: white;
+            border-radius: 40px;
+            padding: 0.5rem 1.4rem;
+            box-shadow: 0 2px 8px rgba(0,40,80,0.08);
+            border: 1px solid #d0dded;
+            font-weight: 500;
+            color: #144b75;
+        }
+
+        /* 卡片通用 */
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 30px -12px rgba(0,40,80,0.15);
+            border: 1px solid #e2eaf2;
+            margin-bottom: 1.8rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: #f8fbfe;
+            border-bottom: 1px solid #e0eaf3;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #103a5e;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header h2 i {
+            color: #2670b0;
+        }
+
+        .edit-icon {
+            background: transparent;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 40px;
+            color: #5f7d9c;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.15s;
+        }
+
+        .edit-icon:hover {
+            background: #dfebf7;
+            color: #0a4c7a;
+        }
+
+        .card-body {
+            padding: 1.6rem 2rem 2rem 2rem;
+        }
+
+        /* 任务基础信息网格 */
+        .task-basic-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem 2rem;
+            align-items: center;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .full-width-row {
+            grid-column: 1 / -1;
+        }
+
+        .field-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5f7c9a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .field-value {
+            background: #f5f9ff;
+            border: 1px solid #d8e4f0;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            font-size: 1rem;
+            color: #1d4668;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .field-value i {
+            color: #8aadcf;
+            cursor: pointer;
+        }
+
+        .field-value select, .field-value input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 1rem;
+            color: #1d4668;
+            outline: none;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            background: #f5f9ff;
+            border: 1px solid #d8e4f0;
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            min-height: 46px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tag {
+            background: #dae9fa;
+            border-radius: 30px;
+            padding: 0.3rem 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #0a4b78;
+        }
+
+        .tag i {
+            color: #d32f2f;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .tag-add {
+            color: #5f7c9a;
+            background: transparent;
+            border: 1px dashed #9bb7d4;
+            border-radius: 30px;
+            padding: 0.3rem 1rem;
+            cursor: default;
+        }
+
+        /* 背景卡片 */
+        .bg-box {
+            background: #f2f9ff;
+            border-radius: 18px;
+            padding: 1.3rem 1.8rem;
+            border: 1px solid #cde1f0;
+        }
+
+        .policy-link {
+            word-break: break-all;
+            background: #e9f2fc;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .policy-link a {
+            color: #0f5b9c;
+            text-decoration: none;
+        }
+
+        .policy-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* 产品&话术&解决方案 三块布局 */
+        .product-qa-solution {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .product-qa-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .product-col {
+            flex: 2 1 380px;
+        }
+
+        .qa-col {
+            flex: 1.2 1 280px;
+            background: #f2f9fc;
+            border-radius: 24px;
+            padding: 1.4rem 1.5rem;
+            border: 1px solid #cde1f0;
+        }
+
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0a3f64;
+        }
+
+        .product-desc {
+            background: #f5faff;
+            padding: 1rem 1.3rem;
+            border-radius: 18px;
+            margin: 0.8rem 0 1.2rem;
+            border: 1px solid #d2e2f2;
+        }
+
+        .advantage-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1rem 0;
+        }
+
+        .advantage-tag {
+            background: #e4eefa;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            color: #1f5b8c;
+            border: 1px solid #b9d2ec;
+        }
+
+        .case-block {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 1rem 1.3rem;
+            margin: 1.2rem 0 0.5rem;
+            border: 1px solid #d7e5f3;
+        }
+
+        .case-item {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: baseline;
+        }
+
+        .case-item a {
+            color: #1f5b8c;
+            text-decoration: none;
+            border-bottom: 1px dashed #8bb3d6;
+        }
+
+        .case-item a:hover {
+            color: #0a3f64;
+            border-bottom: 1px solid #0a3f64;
+        }
+
+        .detail-link-btn-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            border: 1px solid #1f6eb0;
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            color: #1f6eb0;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 0.8rem;
+        }
+
+        .detail-link-btn-left:hover {
+            background: #e1efff;
+        }
+
+        /* 营销话术 Q&A 简洁样式 */
+        .talk-header {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #0d4e7c;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .qa-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .qa-item {
+            border-bottom: 1px dashed #c0d4e8;
+            padding-bottom: 0.8rem;
+        }
+
+        .qa-item:last-child {
+            border-bottom: none;
+        }
+
+        .qa-question {
+            font-weight: 600;
+            color: #1f5b8c;
+            margin-bottom: 0.3rem;
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .qa-question i {
+            color: #e68a2e;
+            font-size: 0.9rem;
+        }
+
+        .qa-answer {
+            color: #2a4a6a;
+            margin-left: 1.5rem;
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .qa-answer i {
+            color: #1f8b4c;
+            font-size: 0.9rem;
+        }
+
+        /* 解决方案文档区 (横跨整行) */
+        .solution-links {
+            background: #f0f6fe;
+            border-radius: 24px;
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            border: 1px solid #cde1f0;
+        }
+
+        .file-chip {
+            background: #eef4fa;
+            border-radius: 60px;
+            padding: 0.6rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid #bed6ec;
+            font-size: 1rem;
+        }
+
+        .file-chip i {
+            color: #b23c1c;
+        }
+
+        .file-chip a {
+            color: #145a9c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .file-chip a:hover {
+            text-decoration: underline;
+        }
+
+        /* 客户清单表格 */
+        .company-table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #dae5f0;
+        }
+
+        .company-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .company-table th {
+            background: #e7f0fa;
+            text-align: left;
+            padding: 1rem 1.2rem;
+            font-weight: 600;
+            color: #17466b;
+            border-bottom: 2px solid #b9d2ea;
+        }
+
+        .company-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #dbe6f2;
+            color: #1f3d5a;
+        }
+
+        .total-badge {
+            background: #ecf5fd;
+            border-radius: 40px;
+            padding: 0.3rem 1.5rem;
+            font-size: 0.95rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        /* 操作区 */
+        .action-footer {
+            background: white;
+            border-radius: 60px;
+            padding: 1.2rem 2.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            box-shadow: 0 8px 20px -8px rgba(0,50,90,0.2);
+            border: 1px solid #c9dbee;
+            margin: 2rem 0 1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            border: 1px solid transparent;
+            font-weight: 500;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: 0.15s;
+            background: white;
+            border-color: #b8cde0;
+            color: #1c4b75;
+        }
+
+        .btn-outline:hover {
+            background: #e1edfa;
+            border-color: #6999cc;
+        }
+
+        .btn-warning {
+            background: #ffe8d9;
+            border-color: #e2964a;
+            color: #874f19;
+        }
+
+        .btn-warning:hover {
+            background: #ffdec6;
+        }
+
+        .btn-primary {
+            background: #0b5d9e;
+            border-color: #0b5d9e;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #094b81;
+        }
+
+        .btn-special {
+            background: #e3eefc;
+            border-color: #6b9bc0;
+            color: #0f4a7a;
+        }
+
+        /* 模态弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-content h3 {
+            font-size: 1.5rem;
+            color: #103a5e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-content .close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #8aa0b9;
+        }
+
+        .modal-content .option-row {
+            margin: 1.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-content label {
+            font-weight: 500;
+            color: #1c4b75;
+        }
+
+        .modal-content select, .modal-content input[type="checkbox"] {
+            padding: 0.4rem;
+            border-radius: 20px;
+            border: 1px solid #b8cde0;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .footnote {
+            text-align: center;
+            color: #6583a3;
+            font-size: 0.85rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #b9d2e7;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 头部 -->
+    <div class="top-bar">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-broadcast-tower"></i></div>
+            <h1>中国移动政企 · 任务下派</h1>
+        </div>
+        <div class="task-chip"><i class="fas fa-fingerprint"></i> 任务ID: TASK-20250312-01</div>
+    </div>
+
+    <!-- 1. 任务基础信息卡片 -->
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-tasks"></i> 任务基础信息</h2>
+            <button class="edit-icon" onclick="alert('编辑任务基本信息')"><i class="fas fa-edit"></i></button>
+        </div>
+        <div class="card-body">
+            <div class="task-basic-grid">
+                <!-- 第一行：任务名称、起始时间、优先级、任务类型 -->
+                <div class="field-group">
+                    <span class="field-label">任务名称</span>
+                    <div class="field-value">
+                        <input type="text" value="电力市场注册合规推广任务" onchange="alert('任务名称已修改(演示)')">
+                        <i class="fas fa-pencil-alt" onclick="alert('修改任务名称')"></i>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">任务起始时间</span>
+                    <div class="field-value">
+                        <input type="text" value="2025-03-15 ~ 2025-04-15" onchange="alert('时间已修改')">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">任务优先级</span>
+                    <div class="field-value" style="background:#fef3d1; color:#b45f06;">高</div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">任务类型</span>
+                    <div class="field-value">
+                        <select onchange="alert('任务类型切换为：'+this.value)">
+                            <option selected>信息化大单</option>
+                            <option>标品营销</option>
+                            <option>专线拓展</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- 第二行：地市/区县 占满整行 -->
+                <div class="field-group full-width-row">
+                    <span class="field-label"><i class="fas fa-map-marker-alt"></i> 任务针对地市/区县</span>
+                    <div class="tag-group">
+                        <span class="tag">北京市 <i class="fas fa-times" onclick="this.parentElement.remove()"></i></span>
+                        <span class="tag">朝阳区 <i class="fas fa-times" onclick="this.parentElement.remove()"></i></span>
+                        <span class="tag-add">+ 添加</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 任务背景卡片 (背景+市场机会) -->
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-info-circle"></i> 任务背景</h2>
+            <button class="edit-icon" onclick="alert('编辑任务背景/市场机会')"><i class="fas fa-edit"></i></button>
+        </div>
+        <div class="card-body">
+            <div class="bg-box">
+                <p><strong>任务背景：</strong>基于 <span class="policy-link"><a href="#" onclick="alert('打开政策原文'); return false;">国家能源局关于支持电力领域新型经营主体创新发展的指导意见</a></span> 政策，解决公司在首都电力交易中心进行市场注册，并接受公示和核验，这一过程复杂且耗时的问题。</p>
+                <p style="margin-top: 1rem;"><strong>市场机会：</strong>电力市场化改革加速，首都电力交易中心新注册需求涌现，专线卫士-审计版可降低合规风险，抢占市场先机。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 推荐产品 & 营销话术 & 解决方案 (三块) -->
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-box-open"></i> 推荐产品 & 解决方案</h2>
+            <button class="edit-icon" onclick="alert('编辑产品/话术/解决方案')"><i class="fas fa-edit"></i></button>
+        </div>
+        <div class="card-body">
+            <div class="product-qa-solution">
+                <!-- 上部分：左侧产品 + 右侧Q&A -->
+                <div class="product-qa-row">
+                    <!-- 左侧产品详情 -->
+                    <div class="product-col">
+                        <div class="product-name">专线卫士-审计版</div>
+                        <div class="product-desc">
+                            <i class="fas fa-info-circle"></i> 面向专线场景的网络管理增值服务，满足上网行为审计、流量控制、多线路负载均衡等需求。
+                        </div>
+                        <div><strong>产品优势</strong></div>
+                        <div class="advantage-list">
+                            <span class="advantage-tag">功能集成</span>
+                            <span class="advantage-tag">快速上线</span>
+                            <span class="advantage-tag">优质服务</span>
+                            <span class="advantage-tag">成本节省</span>
+                        </div>
+                        <div class="case-block">
+                            <!-- 修改点：将“产品案例”改为“产品营销案例” -->
+                            <div><i class="fas fa-briefcase"></i> <strong>产品营销案例</strong> (点击跳转详情)</div>
+                            <div class="case-item"><i class="fas fa-check-circle"></i> <a href="#" onclick="alert('查看农行XX分行案例'); return false;">中国农业银行XX分行实现内网可视化管理与上网行为审计</a></div>
+                            <div class="case-item"><i class="fas fa-check-circle"></i> <a href="#" onclick="alert('查看税务局案例'); return false;">XX税务局通过流量控制解决网络卡顿问题</a></div>
+                        </div>
+                        <!-- 查看详情按钮 (左侧) -->
+                        <button class="detail-link-btn-left" onclick="alert('查看产品完整详情页')">
+                            <i class="fas fa-external-link-alt"></i> 查看产品详情
+                        </button>
+                    </div>
+
+                    <!-- 右侧营销话术 Q&A (简洁形式) -->
+                    <div class="qa-col">
+                        <div class="talk-header"><i class="fas fa-comments"></i> 营销话术 Q&A</div>
+                        <div class="qa-list">
+                            <div class="qa-item">
+                                <div class="qa-question"><i class="fas fa-question-circle"></i> 客户：这个产品能帮我们通过电力交易中心核验吗？</div>
+                                <div class="qa-answer"><i class="fas fa-reply"></i> 完全可以。专线卫士-审计版内置合规审计功能，自动生成符合首都电力交易中心要求的日志报告，帮助快速通过公示核验。</div>
+                            </div>
+                            <div class="qa-item">
+                                <div class="qa-question"><i class="fas fa-question-circle"></i> 客户：部署复杂吗？会影响现有网络吗？</div>
+                                <div class="qa-answer"><i class="fas fa-reply"></i> 部署非常快速，支持云化或轻量设备，1-2天上线，对现有网络无侵入。农行XX分行、XX税务局均已完成部署。</div>
+                            </div>
+                            <div class="qa-item">
+                                <div class="qa-question"><i class="fas fa-question-circle"></i> 客户：成本大概多少？</div>
+                                <div class="qa-answer"><i class="fas fa-reply"></i> 提供灵活套餐，基础版年费仅需X万元，可根据企业规模定制，性价比极高。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 下方解决方案文档链接区域 -->
+                <div class="solution-links">
+                    <span style="font-weight:600; color:#0f4a7a;"><i class="fas fa-file-alt"></i> 解决方案文档：</span>
+                    <div class="file-chip">
+                        <i class="fas fa-file-powerpoint"></i>
+                        <a href="#" onclick="alert('打开海南移动&国家电投交流方案.pptx'); return false;">海南移动&国家电投交流方案.pptx</a>
+                    </div>
+                    <div class="file-chip">
+                        <i class="fas fa-file-pdf"></i>
+                        <a href="#" onclick="alert('打开专线卫士电力合规指引.pdf'); return false;">专线卫士-审计版电力合规指引.pdf</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 客户清单 (企业清单 + 总数) -->
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-building"></i> 企业客户清单</h2>
+            <button class="edit-icon" onclick="alert('编辑客户清单')"><i class="fas fa-edit"></i></button>
+        </div>
+        <div class="card-body">
+            <div class="total-badge"><i class="fas fa-list"></i> 清单总数：4 家</div>
+            <div class="company-table-wrapper">
+                <table class="company-table">
+                    <thead>
+                        <tr>
+                            <th>企业名称</th>
+                            <th>统一社会信用代码</th>
+                            <th>地址</th>
+                            <th>所属行业</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>北京国能电力有限公司</td>
+                            <td>91110108****3421</td>
+                            <td>北京市朝阳区建国路93号</td>
+                            <td>电力生产</td>
+                            <td>张正阳</td>
+                            <td>139****2341</td>
+                        </tr>
+                        <tr>
+                            <td>华电新能源(华北)分公司</td>
+                            <td>91110105****887X</td>
+                            <td>天津市河西区友谊路35号</td>
+                            <td>新能源</td>
+                            <td>李敏</td>
+                            <td>158****7902</td>
+                        </tr>
+                        <tr>
+                            <td>首都电力交易中心有限公司</td>
+                            <td>91110000****0123</td>
+                            <td>北京市西城区前门西大街41号</td>
+                            <td>交易/电力</td>
+                            <td>王敏慧</td>
+                            <td>136****4509</td>
+                        </tr>
+                        <tr>
+                            <td>国网冀北电力有限公司</td>
+                            <td>91110000****557F</td>
+                            <td>河北省廊坊市广阳区新华路105号</td>
+                            <td>电网</td>
+                            <td>赵建业</td>
+                            <td>151****6728</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 操作区 (四个按钮) -->
+    <div class="action-footer">
+        <div class="btn-group">
+            <button class="btn btn-outline" onclick="alert('重新生成任务清单 (模拟)')"><i class="fas fa-sync-alt"></i> 重新生成</button>
+            <button class="btn btn-warning" onclick="alert('进入人工修改模式 (可全局调整)')"><i class="fas fa-pen-fancy"></i> 人工修改</button>
+            <button class="btn btn-special" id="autoSettingBtn"><i class="fas fa-cog"></i> 自动设置</button>
+        </div>
+        <button class="btn btn-primary" onclick="alert('任务已下派！ (演示)')"><i class="fas fa-check-circle"></i> 确认下派任务</button>
+    </div>
+
+    <!-- 提示行 -->
+    <div style="display: flex; gap: 2rem; justify-content: center; background:#dfebf7; padding:0.7rem; border-radius:60px; margin:1rem 0;">
+        <span><i class="fas fa-check-circle"></i> 信息无误请确认下派</span>
+        <span><i class="fas fa-edit"></i> 不满意可重新生成/人工修改</span>
+        <span><i class="fas fa-robot"></i> 自动设置可配置自动下派规则</span>
+    </div>
+
+    <!-- 模态弹窗 (自动设置) -->
+    <div id="settingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h3><i class="fas fa-sliders-h"></i> 自动下派设置</h3>
+            <div class="option-row">
+                <label>当客户清单符合以下条件时自动下派：</label>
+            </div>
+            <div class="option-row">
+                <input type="checkbox" checked> 企业均已通过实名认证
+            </div>
+            <div class="option-row">
+                <input type="checkbox" checked> 推荐产品匹配度 ≥ 80%
+            </div>
+            <div class="option-row">
+                <label>超时自动确认：</label>
+                <select>
+                    <option>不启用</option>
+                    <option>24小时后</option>
+                    <option selected>48小时后</option>
+                    <option>72小时后</option>
+                </select>
+            </div>
+            <div class="option-row">
+                <label>通知方式：</label>
+                <select>
+                    <option>仅站内信</option>
+                    <option selected>短信+站内信</option>
+                    <option>企业微信</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="document.getElementById('settingModal').style.display='none'">取消</button>
+                <button class="btn btn-primary" onclick="alert('设置已保存'); document.getElementById('settingModal').style.display='none'">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footnote">
+        <i class="fas fa-mouse-pointer"></i> 中国移动政企内部演示原型 · 所有交互均为模拟反馈
+    </div>
+</div>
+
+<script>
+    // 自动设置按钮显示弹窗
+    document.getElementById('autoSettingBtn').addEventListener('click', function() {
+        document.getElementById('settingModal').style.display = 'flex';
+    });
+
+    // 关闭弹窗
+    document.getElementById('closeModalBtn').addEventListener('click', function() {
+        document.getElementById('settingModal').style.display = 'none';
+    });
+
+    // 点击模态背景关闭
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('settingModal')) {
+            document.getElementById('settingModal').style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>
